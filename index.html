@@ -47,20 +47,25 @@
         }
 
         CsvToHtmlTable.init({
-            csv_path: "data/dir.csv",
-            element: "table-container",
-            allow_download: false,
-            csv_options: {
-                separator: ",",
-                delimiter: '"'
-            },
-            datatables_options: {
-                paging: true
-            },
-            custom_formatting: [
-                [4, format_link]
-            ]
-        });
+  csv_path: 'data/Health Clinics in Chicago.csv',
+  element: 'table-container',
+  allow_download: true,
+  csv_options: {separator: ',', delimiter: '"'},
+  datatables_options: {
+    "paging": false,
+    "initComplete": function(settings, json) {
+      // Add a filter button for the "category" column
+      var categoryColumn = 0; // Assuming "category" is the first column (0-based index)
+      var filterInput = $('<input type="text" placeholder="Filter by category" class="form-control">');
+      $(filterInput).appendTo($('div.dataTables_filter', this.table().container()).empty());
+
+      // Apply the filter on input keyup event
+      $(filterInput).on('keyup', function() {
+        settings.oInstance.fnFilter($(this).val(), categoryColumn);
+      });
+    }
+  }
+});
     </script>
 </body>
 
