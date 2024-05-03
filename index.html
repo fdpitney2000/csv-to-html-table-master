@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -11,8 +10,8 @@
     <meta content="Display any CSV file as a searchable, filterable, pretty HTML table">
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 </head>
 
@@ -21,59 +20,58 @@
         <main class="row">
             <div class="col">
                 <h1>South Whidbey Directory</h1>
-
                 <div id="table-container"></div>
             </div>
         </main>
         <footer class="row">
             <div class="col">
-               
-                
             </div>
         </footer>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/js/bootstrap.bundle.min.js">
+    </script>
     <script src="js/jquery.csv.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <script src="js/csv_to_html_table.js"></script>
-
     <script>
         function format_link(link) {
             if (link)
                 return "<a href='" + link + "' target='_blank'>" + link + "</a>";
             else return "";
         }
+    </script>
+    <script>
+        $(document).ready(function () {
+            CsvToHtmlTable.init({
+                csv_path: "data/dir.csv",
+                element: "table-container",
+                allow_download: false,
+                csv_options: {
+                    separator: ",",
+                    delimiter: '"'
+                },
+                datatables_options: {
+                    paging: true
+                },
+                callbacks: {
+                    onTableDisplayed: function (table) {
+                        // Get the category column index
+                        var categoryColumn = table.column('0:visible');
 
-        CsvToHtmlTable.init({
-    csv_path: "data/dir.csv",
-    element: "table-container",
-    allow_download: false,
-    csv_options: {
-        separator: ",",
-        delimiter: '"'
-    },
-    datatables_options: {
-        paging: true
-    },
-    callbacks: {
-        onTableDisplayed: function(table) {
-            // Get the category column index
-            var categoryColumn = table.column('0:visible');
+                        // Create a filter input for the category column
+                        var filterInput = $('<input type="text" placeholder="Filter by category" class="form-control">');
+                        filterInput.appendTo($('div.dataTables_filter', table.table().container()));
 
-            // Create a filter input for the category column
-            var filterInput = $('<input type="text" placeholder="Filter by category" class="form-control">');
-            filterInput.appendTo($('div.dataTables_filter', table.table().container()));
-
-            // Apply the filter on input keyup event
-            filterInput.on('keyup', function() {
-                categoryColumn.search($(this).val()).draw();
+                        // Apply the filter on input keyup event
+                        filterInput.on('keyup', function () {
+                            categoryColumn.search($(this).val()).draw();
+                        });
+                    }
+                }
             });
-        }
-    }
-
-
+        });
     </script>
 </body>
 
