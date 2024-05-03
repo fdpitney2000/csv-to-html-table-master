@@ -47,28 +47,33 @@
         }
 
         CsvToHtmlTable.init({
-            csv_path: "data/dir.csv",
-            element: "table-container",
-            allow_download: false,
-            csv_options: {
-                separator: ",",
-                delimiter: '"'
-            },
-            datatables_options: {
-                paging: true,
-                "initComplete": function(settings, json) {
-                  // Add a filter button for the "category" column
-                  var categoryColumn = 0; // Assuming "category" is the first column (0-based index)
-                  var filterInput = $('<input type="text" placeholder="Filter by category" class="form-control">');
-                  $(filterInput).appendTo($('div.dataTables_filter', this.table().container()).empty());
-                    
-                  // Apply the filter on input keyup event
-                  $(filterInput).on('keyup', function() {
-                    settings.oInstance.fnFilter($(this).val(), categoryColumn);
-                });
+    csv_path: "data/dir.csv",
+    element: "table-container",
+    allow_download: false,
+    csv_options: {
+        separator: ",",
+        delimiter: '"'
+    },
+    datatables_options: {
+        paging: true
+    },
+    callbacks: {
+        onTableDisplayed: function(table) {
+            // Get the category column index
+            var categoryColumn = table.column('0:visible');
+
+            // Create a filter input for the category column
+            var filterInput = $('<input type="text" placeholder="Filter by category" class="form-control">');
+            filterInput.appendTo($('div.dataTables_filter', table.table().container()));
+
+            // Apply the filter on input keyup event
+            filterInput.on('keyup', function() {
+                categoryColumn.search($(this).val()).draw();
+            });
+        }
     }
-  }
 });
+
     </script>
 </body>
 
